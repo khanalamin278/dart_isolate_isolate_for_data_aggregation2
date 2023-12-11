@@ -24,13 +24,11 @@ Future<Map<dynamic, List<Map>>> aggregateDataInIsolate(
       Completer<Map<dynamic, List<Map>>>();
 
   ReceivePort receivePort = ReceivePort();
-
-  Isolate isolate = await Isolate.spawn(aggregateIsolate,
-      {'data': data, 'key': key, 'sendPort': receivePort.sendPort});
-
   if (!data.any((element) => element.containsKey(key))) {
     return {};
   }
+  Isolate isolate = await Isolate.spawn(aggregateIsolate,
+      {'data': data, 'key': key, 'sendPort': receivePort.sendPort});
 
   receivePort.listen((message) {
     completer.complete(message);
